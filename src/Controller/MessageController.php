@@ -80,8 +80,12 @@ class MessageController extends Controller {
             return $this->withValidationErrors($errors, $response);
         }
 
-        // MessageService sends message for DB
-        $message = $this->messageService->createMessage($user, $createMessageDTO);
+        try {
+            // MessageService sends message for DB
+            $message = $this->messageService->createMessage($user, $createMessageDTO);
+        } catch (\Throwable $e) {
+            return $this->withError(404, $e, $response);
+        }
 
         // Prepare data for API display
         $readMessageDTO = MessageDTOMapper::toReadDTO($message);
