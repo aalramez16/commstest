@@ -18,6 +18,12 @@ composer install
 
 This will install the dependencies specified in `composer.json`. This is very similar to how npm works.
 
+## Architecture
+- Slim Framework
+- Doctrine ORM
+- DTO mapping layer
+- Token-based authentication middleware
+
 ## Local Environment
 In order to run the project, you will need to create a LAMP (or WAMP) environment for hosting php on an apache server.
 I chose LAMP because testing on shared hosting is the cheapest and easiest option.
@@ -83,7 +89,7 @@ Now, you should see the following:
 There are a few more than are shown here but these should help get you started.
 
 ### Rooms 
-#### `Get /rooms` 
+#### `GET /rooms` 
 Retrieves all rooms in reverse chronological order.
 
 Example response body:
@@ -102,7 +108,7 @@ Example response body:
 ]
 ```
 
-#### `Get /room/1/messages` 
+#### `GET /room/1/messages` 
 Retrieves all messages from a specified room in reverse chronological order.
 
 Example response body:
@@ -144,7 +150,7 @@ Example Request body:
 ```json
 {
     "contents": "Hey what's going on guys?",
-    "roomId": 1,
+    "roomId": 1
 }
 ```
 Example response body:
@@ -158,7 +164,7 @@ Example response body:
 ```
 
 ### Users
-#### `get /users` 
+#### `GET /users` 
 
 Gets all users
 
