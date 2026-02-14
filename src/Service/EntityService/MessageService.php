@@ -44,7 +44,7 @@ class MessageService {
 
         $room = $this->entityManager->getRepository(Room::class)->findOneBy(['id' => $dto->roomId]);
         if (!$room) {
-            throw new \RuntimeException("Room not found.");
+            throw new \RuntimeException("Tried to post a message to a room that does not exist.");
         }
 
         $message->setRoom($room);
