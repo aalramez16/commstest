@@ -10,8 +10,8 @@ use Slim\App;
 
 return function (App $app) {
     $app->get('/', function(Request $request, Response $response) {
-        $response->getBody()->write('Hello World!');
-        return $response;
+        $response->getBody()->write(json_encode(['message' => 'Welcome!']));
+        return $response->withHeader('Content-Type', 'application/json');
     });
     
     $app->get('/keygen', function(Request $request, Response $response) {
