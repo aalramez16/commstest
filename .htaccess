@@ -2,10 +2,16 @@
     RewriteEngine On
     RewriteBase /
 
+    # Block access to sensitive folders
+    RewriteRule ^(db|src|vendor)/ - [F,L]
+
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ /index.php [L]
 </IfModule>
-<Files ".config.php">
+<FilesMatch "\.(sql|config\.php|md)$">
     Require all denied
-</Files>
+</FilesMatch>
+<FilesMatch "^composer\.(json|lock)$">
+    Require all denied
+</FilesMatch>
