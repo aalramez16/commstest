@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-
 /**
  * index.php
  * --------------------------------------------------------------------------
@@ -56,7 +55,7 @@ $app = AppFactory::create();
  * The callable gives a response for the root endpoint and also imports other endpoints.
  * If an additional endpoint group gets added, it should be imported to core.php, not here.
  */
-require __DIR__ . '/src/App/Routes/core.php'($app);
+(require $config['ROOT_DIR'] . '/src/App/Routes/core.php')($app);
 
 /* ==========================================================================
  * 
