@@ -5,6 +5,7 @@ namespace CommsTest\Service\EntityService;
 
 use CommsTest\DTO\Message\CreateMessageDTO;
 use CommsTest\Entity\Message;
+use CommsTest\Entity\Room;
 use CommsTest\Entity\User;
 use Doctrine\ORM\EntityManager;
 
@@ -23,6 +24,13 @@ class MessageService {
     }
 
     /**
+     * Creates a message.
+     * 
+     * Requires `contents` to be filled with the contents of the message.
+     * 
+     * Requires a `roomId` to be passed, so that the message appears in a room.
+     * Messages must be assigned rooms.
+     * 
      * @param User $user the user creating the message
      * @param CreateMessageDTO $dto data transfer object for creating messages
      * @return Message
@@ -31,6 +39,9 @@ class MessageService {
         $message = new Message();
         $message->setSender($user);
         $message->setMessageContents($dto->contents);
+
+        $room = $this->entityManager->getRepository(Room::class)->findOneBy(['id' => $dto->roomId]);
+        $message->setRoom($room);
 
         $this->entityManager->persist($message);
         $this->entityManager->flush();

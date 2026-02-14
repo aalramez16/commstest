@@ -41,16 +41,52 @@ class DataTransferService {
     ];
 
     /** 
-     * Copies data from an input array into the DTO
+     * Copies data from an input array into the DTO.
+     * Will cast to proper type if necessary.
+     * Currently works for int, string, float, and bool.
      */
     private function populateDTO(DTOInterface $dto, array $data) {
         foreach ($data as $prop => $value) {
-            if (property_exists($dto, $prop)) {
-                $dto->$prop = $value;
+            if (!property_exists($dto, $prop)) {
+                continue;
             }
+
+            $reflection = new \ReflectionProperty($dto, $prop);
+            $type = $reflection->getType();
+
+            if ($type) {
+                $typeName = $type->getName();
+                $nullable = $type->allowsNull();
+
+                if ($value === null && !$nullable) {
+                    throw new \InvalidArgumentException("Property $prop cannot be null");
+                }
+
+                switch ($typeName) {
+                    case 'int':
+                        $value = $value !== null ? (int) $value : null;
+                        break;
+                    case 'float':
+                        $value = $value !== null ? (float) $value : null;
+                        break;
+                    case 'bool':
+                        $value = $value !== null ? filter_var($value, FILTER_VALIDATE_BOOLEAN) : null;
+                        break;
+                    case 'string':
+                        $value = $value !== null ? (string) $value : null;
+                        break;
+                    default:
+                        // leave objects as-is
+                        break;
+                }
+            }
+
+            $dto->$prop = $value;
         }
+
         return $dto;
     }
+
 
     /**
      * Iteratively calls `buildDTOFor()` on each indexed value. returns a new array of DTOInterface objects.

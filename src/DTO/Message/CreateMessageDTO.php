@@ -19,4 +19,8 @@ class CreateMessageDTO implements DTOInterface {
     #[Assert\NotBlank]
     #[Assert\Length(max: 500)]
     public ?string $contents;
+
+    #[Assert\NotBlank]
+    #[Assert\Type('integer')]
+    public int $roomId;
 }

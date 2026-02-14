@@ -72,6 +72,7 @@ class MessageController extends Controller {
         // Prepare data transfer object.
         $createMessageDTO = $this->dataTransferService->buildDTOFor(Message::class, 'create', $payload);
         $createMessageDTO->contents = $payload['contents'] ?? null;
+        $createMessageDTO->roomId = $payload['roomId'] ?? null;
 
         // Validation stage
         $errors = $this->validatorService->validate($createMessageDTO);
