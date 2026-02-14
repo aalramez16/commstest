@@ -24,7 +24,9 @@ class MessageService {
     }
 
     /**
-     * Creates a message.
+     * Creates a message Entity.
+     * The sender is assigned from the `Request` attributes.
+     * Remaining data must be structured in a DTO.
      * 
      * Requires `contents` to be filled with the contents of the message.
      * 
