@@ -54,30 +54,46 @@ class DataTransferService {
             $reflection = new \ReflectionProperty($dto, $prop);
             $type = $reflection->getType();
 
-            if ($type) {
-                $typeName = $type->getName();
+            if ($type !== null) {
+
                 $nullable = $type->allowsNull();
 
                 if ($value === null && !$nullable) {
                     throw new \InvalidArgumentException("Property $prop cannot be null");
                 }
 
-                switch ($typeName) {
-                    case 'int':
-                        $value = $value !== null ? (int) $value : null;
-                        break;
-                    case 'float':
-                        $value = $value !== null ? (float) $value : null;
-                        break;
-                    case 'bool':
-                        $value = $value !== null ? filter_var($value, FILTER_VALIDATE_BOOLEAN) : null;
-                        break;
-                    case 'string':
-                        $value = $value !== null ? (string) $value : null;
-                        break;
-                    default:
-                        // leave objects as-is
-                        break;
+                $typeNames = [];
+
+                if ($type instanceof \ReflectionNamedType) {
+                    $typeNames[] = $type->getName();
+                }
+
+                if ($type instanceof \ReflectionUnionType) {
+                    foreach ($type->getTypes() as $unionType) {
+                        $typeNames[] = $unionType->getName();
+                    }
+                }
+
+                // Remove null from union types
+                $typeNames = array_filter($typeNames, fn($t) => $t !== 'null');
+
+                if ($value !== null && count($typeNames) > 0) {
+                    $primaryType = $typeNames[0];
+
+                    switch ($primaryType) {
+                        case 'int':
+                            $value = (int) $value;
+                            break;
+                        case 'float':
+                            $value = (float) $value;
+                            break;
+                        case 'bool':
+                            $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+                            break;
+                        case 'string':
+                            $value = (string) $value;
+                            break;
+                    }
                 }
             }
 
@@ -86,6 +102,7 @@ class DataTransferService {
 
         return $dto;
     }
+
 
 
     /**
