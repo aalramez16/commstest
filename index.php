@@ -1,8 +1,6 @@
 <?php
 declare(strict_types=1);
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
+
 /**
  * index.php
  * --------------------------------------------------------------------------
@@ -58,7 +56,7 @@ $app = AppFactory::create();
  * The callable gives a response for the root endpoint and also imports other endpoints.
  * If an additional endpoint group gets added, it should be imported to core.php, not here.
  */
-require __DIR__ . '/Routes/core.php'($app);
+require __DIR__ . '/src/App/Routes/core.php'($app);
 
 /* ==========================================================================
  * 
