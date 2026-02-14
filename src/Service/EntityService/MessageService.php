@@ -43,6 +43,10 @@ class MessageService {
         $message->setMessageContents($dto->contents);
 
         $room = $this->entityManager->getRepository(Room::class)->findOneBy(['id' => $dto->roomId]);
+        if (!$room) {
+            throw new \RuntimeException("Room not found.");
+        }
+
         $message->setRoom($room);
 
         $this->entityManager->persist($message);
